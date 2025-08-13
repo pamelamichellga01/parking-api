@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: postgres17-parking
+    environment:
+      POSTGRES_DB: parking
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 12345678
+    volumes:
+      - ./db-data:/var/lib/postgresql/data # Carpeta local db-data junto al docker-compose
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
