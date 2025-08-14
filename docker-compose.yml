@@ -11,5 +11,5 @@ services:
     volumes:
       - ./db-data:/var/lib/postgresql/data # Carpeta local db-data junto al docker-compose
     ports:
-      - "5433:5432"
+      - "5434:5432"
     restart: unless-stopped

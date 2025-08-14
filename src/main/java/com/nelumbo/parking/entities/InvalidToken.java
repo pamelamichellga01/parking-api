@@ -6,22 +6,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "vehicles")
+@Table(name = "invalid_tokens")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Vehicle {
-
+public class InvalidToken {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, length = 6)
-    private String licensePlate;
-
-    @ManyToOne
-    @JoinColumn(name = "parking_id")
-    private Parking parking;
+    
+    @Column(nullable = false, unique = true)
+    private String token;
+    
+    @Column(nullable = false)
+    private LocalDateTime invalidatedAt;
+    
+    @Column(nullable = false)
+    private LocalDateTime expiresAt;
 }

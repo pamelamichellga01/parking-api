@@ -2,39 +2,31 @@ package com.nelumbo.parking.entities;
 
 import com.nelumbo.parking.enums.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "user", indexes = {
-        @Index(name = "idx_user_email", columnList = "email", unique = true)
-    }
-)
-@Getter
-@Setter
+@Table(name = "users")
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class User {
-    @Id
+     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
-    private String nombre;
-
-    @Email
-    @Column(nullable = false, unique = true)
-    private String email;
 
     @Column(nullable = false)
+    private String name;
+
+     @Column(nullable = false, unique = true)
+    private String email;
+
+     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
-    private Role rol; // ADMIN o SOCIO
-
-    // Un SOCIO puede tener varios parqueaderos
-    @OneToMany(mappedBy = "socioAsignado")
-    private List<Parking> parKing;
+     @Enumerated(EnumType.STRING)
+    private Role role;
 }

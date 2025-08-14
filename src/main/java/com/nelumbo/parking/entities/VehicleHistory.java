@@ -6,13 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "vehicles")
+@Table(name = "vehicle_history")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Vehicle {
+public class VehicleHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +22,12 @@ public class Vehicle {
 
     @Column(nullable = false, length = 6)
     private String licensePlate;
+
+    @Column(nullable = false)
+    private LocalDateTime entryDateTime;
+
+    @Column(nullable = false)
+    private LocalDateTime exitDateTime;
 
     @ManyToOne
     @JoinColumn(name = "parking_id")
