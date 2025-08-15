@@ -10,35 +10,38 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "vehicle_history")
+@Table(name = "parking_records")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VehicleHistory {
+public class ParkingRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 6)
-    private String licensePlate;
+    @ManyToOne
+    @JoinColumn(name = "vehicle_id", nullable = false)
+    private Vehicle vehicle;
 
-    @Column(nullable = false)
-    private String parkingName;
+    @ManyToOne
+    @JoinColumn(name = "parking_id", nullable = false)
+    private Parking parking;
 
     @Column(nullable = false)
     private LocalDateTime entryDateTime;
 
-    @Column(nullable = false)
     private LocalDateTime exitDateTime;
 
-    @Column(nullable = false)
     private BigDecimal totalCost;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Long parkingId;
+    private ParkingStatus status;
 
-    @Column(nullable = false)
-    private Long vehicleId;
+    public enum ParkingStatus {
+        PARKED,    // Vehículo actualmente en el parqueadero
+        EXITED     // Vehículo ya salió
+    }
 }

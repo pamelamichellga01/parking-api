@@ -16,6 +16,8 @@ import javax.crypto.SecretKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
@@ -38,9 +40,15 @@ public class JwtUtil {
     public String generateToken(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         long now = System.currentTimeMillis();
-
+        
+        // Obtener los roles del usuario
+        List<String> roles = authentication.getAuthorities().stream()
+                .map(authority -> authority.getAuthority())
+                .collect(Collectors.toList());
+        
         return Jwts.builder()
                 .subject(userDetails.getUsername())        // email
+                .claim("roles", roles)                    // roles del usuario
                 .issuedAt(new Date(now))
                 .expiration(new Date(now + expirationMs))
                 .signWith(key, Jwts.SIG.HS256)             // API 0.12.x
@@ -75,6 +83,13 @@ public class JwtUtil {
 
     public String extractUserName(String token) {
         return extractAllClaims(token).getSubject();
+    }
+    
+    // NUEVO MÉTODO: Extraer roles del token
+    @SuppressWarnings("unchecked")
+    public List<String> extractRoles(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("roles", List.class);
     }
     
     public boolean isTokenInvalidated(String token) {

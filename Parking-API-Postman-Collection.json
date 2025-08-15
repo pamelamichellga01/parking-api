@@ -1,0 +1,836 @@
+{
+	"info": {
+		"_postman_id": "parking-api-collection",
+		"name": "Parking API - Prueba Técnica",
+		"description": "Colección completa para probar la API de Parqueaderos con todos los endpoints disponibles",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔐 AUTENTICACIÓN",
+			"item": [
+				{
+					"name": "1. Login Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@nelumbo.com\",\n  \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Login Socio",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"socio@nelumbo.com\",\n  \"password\": \"socio123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Registrar Socio (como Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Juan Socio\",\n  \"email\": \"juan.socio@nelumbo.com\",\n  \"password\": \"socio123\",\n  \"role\": \"SOCIO\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "register"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "logout"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🏢 PARQUEADEROS (CRUD)",
+			"item": [
+				{
+					"name": "1. Crear Parqueadero (con socio)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Parqueadero Centro\",\n  \"capacity\": 50,\n  \"hourlyRate\": 2.50,\n  \"partnerId\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/parkings",
+							"host": ["{{base_url}}"],
+							"path": ["parkings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Crear Parqueadero (sin socio)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Parqueadero Norte\",\n  \"capacity\": 30,\n  \"hourlyRate\": 3.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/parkings",
+							"host": ["{{base_url}}"],
+							"path": ["parkings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Obtener Todos los Parqueaderos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/parkings",
+							"host": ["{{base_url}}"],
+							"path": ["parkings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Obtener Parqueadero por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/parkings/1",
+							"host": ["{{base_url}}"],
+							"path": ["parkings", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. Actualizar Parqueadero",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Parqueadero Centro Actualizado\",\n  \"capacity\": 60,\n  \"hourlyRate\": 3.00,\n  \"partnerId\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/parkings/1",
+							"host": ["{{base_url}}"],
+							"path": ["parkings", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6. Eliminar Parqueadero",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/parkings/1",
+							"host": ["{{base_url}}"],
+							"path": ["parkings", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7. Asociar Socio a Parqueadero",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"partnerId\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/parkings/2/associate-partner",
+							"host": ["{{base_url}}"],
+							"path": ["parkings", "2", "associate-partner"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8. Desasociar Socio de Parqueadero",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/parkings/2/partner",
+							"host": ["{{base_url}}"],
+							"path": ["parkings", "2", "partner"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9. Verificar si Parqueadero tiene Socio",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/parkings/1/has-partner",
+							"host": ["{{base_url}}"],
+							"path": ["parkings", "1", "has-partner"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10. Obtener Parqueaderos sin Socio",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/parkings/without-partner",
+							"host": ["{{base_url}}"],
+							"path": ["parkings", "without-partner"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11. Obtener Parqueaderos por Socio ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/parkings/partner/2",
+							"host": ["{{base_url}}"],
+							"path": ["parkings", "partner", "2"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "12. Obtener Parqueaderos por Socio Email",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/parkings/partner/email/socio@nelumbo.com",
+							"host": ["{{base_url}}"],
+							"path": ["parkings", "partner", "email", "socio@nelumbo.com"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🚗 VEHÍCULOS (Entrada/Salida)",
+			"item": [
+				{
+					"name": "1. Registrar Entrada de Vehículo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{socio_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"licensePlate\": \"ABC123\",\n  \"parkingId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/vehicles/entry",
+							"host": ["{{base_url}}"],
+							"path": ["vehicles", "entry"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Registrar Salida de Vehículo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{socio_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"licensePlate\": \"ABC123\",\n  \"parkingId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/vehicles/exit",
+							"host": ["{{base_url}}"],
+							"path": ["vehicles", "exit"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Obtener Vehículos Estacionados",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{socio_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/vehicles/parked/1",
+							"host": ["{{base_url}}"],
+							"path": ["vehicles", "parked", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Buscar Vehículos por Placa",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{socio_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/vehicles/search?plate=ABC",
+							"host": ["{{base_url}}"],
+							"path": ["vehicles", "search"],
+							"query": [
+								{
+									"key": "plate",
+									"value": "ABC"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📊 REPORTES",
+			"item": [
+				{
+					"name": "1. Top Vehículos en Todos los Parqueaderos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports/top-vehicles-all-parkings?limit=10",
+							"host": ["{{base_url}}"],
+							"path": ["reports", "top-vehicles-all-parkings"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Top Vehículos por Parqueadero",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports/parking/1/top-vehicles?limit=10",
+							"host": ["{{base_url}}"],
+							"path": ["reports", "parking", "1", "top-vehicles"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Vehículos de Primera Vez por Parqueadero",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports/parking/1/first-time-vehicles",
+							"host": ["{{base_url}}"],
+							"path": ["reports", "parking", "1", "first-time-vehicles"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Ganancias por Período (Socio)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{socio_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports/parking/1/earnings-period?period=month",
+							"host": ["{{base_url}}"],
+							"path": ["reports", "parking", "1", "earnings-period"],
+							"query": [
+								{
+									"key": "period",
+									"value": "month"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. Ganancias por Fecha (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports/parking/1/earnings?date=2024-01-15",
+							"host": ["{{base_url}}"],
+							"path": ["reports", "parking", "1", "earnings"],
+							"query": [
+								{
+									"key": "date",
+									"value": "2024-01-15"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6. Ganancias de Todos los Parqueaderos por Fecha",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports/all-parkings/earnings?date=2024-01-15",
+							"host": ["{{base_url}}"],
+							"path": ["reports", "all-parkings", "earnings"],
+							"query": [
+								{
+									"key": "date",
+									"value": "2024-01-15"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7. Estadísticas Generales del Sistema",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports/statistics",
+							"host": ["{{base_url}}"],
+							"path": ["reports", "statistics"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📧 EMAIL",
+			"item": [
+				{
+					"name": "1. Enviar Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"usuario@example.com\",\n  \"placa\": \"ABC123\",\n  \"mensaje\": \"Su vehículo ha sido registrado exitosamente\",\n  \"parqueaderoNombre\": \"Parqueadero Centro\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/email/send",
+							"host": ["{{base_url}}"],
+							"path": ["email", "send"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔒 PRUEBAS DE SEGURIDAD",
+			"item": [
+				{
+					"name": "1. Crear Parqueadero sin Token (debe fallar)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Parqueadero Ilegal\",\n  \"capacity\": 10,\n  \"hourlyRate\": 1.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/parkings",
+							"host": ["{{base_url}}"],
+							"path": ["parkings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Socio intenta crear Parqueadero (debe fallar)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{socio_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Parqueadero Socio\",\n  \"capacity\": 10,\n  \"hourlyRate\": 1.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/parkings",
+							"host": ["{{base_url}}"],
+							"path": ["parkings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Usuario no autenticado intenta registrar Socio (debe fallar)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Usuario Ilegal\",\n  \"email\": \"ilegal@test.com\",\n  \"password\": \"123456\",\n  \"role\": \"SOCIO\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "register"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Socio intenta acceder a estadísticas generales (debe fallar)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{socio_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/reports/statistics",
+							"host": ["{{base_url}}"],
+							"path": ["reports", "statistics"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🧪 PRUEBAS DE VALIDACIÓN",
+			"item": [
+				{
+					"name": "1. Crear Parqueadero con datos inválidos (debe fallar)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"\",\n  \"capacity\": -5,\n  \"hourlyRate\": -1.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/parkings",
+							"host": ["{{base_url}}"],
+							"path": ["parkings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Registrar vehículo con placa inválida (debe fallar)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{socio_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"licensePlate\": \"ABC12\",\n  \"parkingId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/parkings/1",
+							"host": ["{{base_url}}"],
+							"path": ["vehicles", "entry"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Registrar vehículo con placa muy larga (debe fallar)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{socio_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"licensePlate\": \"ABC1234\",\n  \"parkingId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/parkings/1",
+							"host": ["{{base_url}}"],
+							"path": ["vehicles", "entry"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "admin_token",
+			"value": "TOKEN_ADMIN_AQUI",
+			"type": "string"
+		},
+		{
+			"key": "socio_token",
+			"value": "TOKEN_SOCIO_AQUI",
+			"type": "string"
+		}
+	]
+}

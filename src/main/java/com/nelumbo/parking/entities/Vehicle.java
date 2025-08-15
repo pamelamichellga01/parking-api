@@ -18,10 +18,6 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 6)
+    @Column(nullable = false, unique = true, length = 6)
     private String licensePlate;
-
-    @ManyToOne
-    @JoinColumn(name = "parking_id")
-    private Parking parking;
 }

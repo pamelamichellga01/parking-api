@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "parkings")
@@ -20,19 +20,16 @@ public class Parking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
     private Integer capacity;
 
-    @Column(nullable = false)
-    private Double hourlyRate;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal hourlyRate;
 
     @ManyToOne
     @JoinColumn(name = "partner_id")
     private User partner;
-
-    @OneToMany(mappedBy = "parking", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Vehicle> vehicles;
 }
