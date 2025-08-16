@@ -1,6 +1,5 @@
 package com.nelumbo.parking.services;
 
-import com.nelumbo.parking.entities.Parking;
 import com.nelumbo.parking.entities.VehicleHistory;
 import com.nelumbo.parking.exceptions.ValidationException;
 import com.nelumbo.parking.repositories.ParkingRecordRepository;
@@ -14,12 +13,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,19 +38,11 @@ class ReportServiceTest {
     @InjectMocks
     private ReportService reportService;
 
-    private Parking testParking;
     private VehicleHistory testHistory1;
     private VehicleHistory testHistory2;
 
     @BeforeEach
     void setUp() {
-        testParking = Parking.builder()
-                .id(1L)
-                .name("Test Parking")
-                .capacity(50)
-                .hourlyRate(BigDecimal.valueOf(5.00))
-                .build();
-
         testHistory1 = VehicleHistory.builder()
                 .id(1L)
                 .licensePlate("ABC123")

@@ -12,46 +12,51 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final String TIMESTAMP= "timestamp";
+    private static final String STATUS = "status";
+    private static final String ERROR = "error";
+    private static final String MESSAGE = "message";
+
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<?> handleAuthenticationException(AuthenticationException e) {
+    public ResponseEntity<Map<String, Object>> handleAuthenticationException(AuthenticationException e) {
         Map<String, Object> response = new HashMap<>();
-        response.put("timestamp", LocalDateTime.now());
-        response.put("status", HttpStatus.UNAUTHORIZED.value());
-        response.put("error", "Authentication Error");
-        response.put("message", e.getMessage());
+        response.put(TIMESTAMP, LocalDateTime.now());
+        response.put(STATUS, HttpStatus.UNAUTHORIZED.value());
+        response.put(ERROR, "Authentication Error");
+        response.put(MESSAGE, e.getMessage());
         
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @ExceptionHandler(AuthorizationException.class)
-    public ResponseEntity<?> handleAuthorizationException(AuthorizationException e) {
+    public ResponseEntity<Map<String, Object>> handleAuthorizationException(AuthorizationException e) {
         Map<String, Object> response = new HashMap<>();
-        response.put("timestamp", LocalDateTime.now());
-        response.put("status", HttpStatus.FORBIDDEN.value());
-        response.put("error", "Authorization Error");
-        response.put("message", e.getMessage());
+        response.put(TIMESTAMP, LocalDateTime.now());
+        response.put(STATUS, HttpStatus.FORBIDDEN.value());
+        response.put(ERROR, "Authorization Error");
+        response.put(MESSAGE, e.getMessage());
         
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<?> handleValidationException(ValidationException e) {
+    public ResponseEntity<Map<String, Object>> handleValidationException(ValidationException e) {
         Map<String, Object> response = new HashMap<>();
-        response.put("timestamp", LocalDateTime.now());
-        response.put("status", HttpStatus.BAD_REQUEST.value());
-        response.put("error", "Validation Error");
-        response.put("message", e.getMessage());
+        response.put(TIMESTAMP, LocalDateTime.now());
+        response.put(STATUS, HttpStatus.BAD_REQUEST.value());
+        response.put(ERROR, "Validation Error");
+        response.put(MESSAGE, e.getMessage());
         
         return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGenericException(Exception e) {
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception e) {
         Map<String, Object> response = new HashMap<>();
-        response.put("timestamp", LocalDateTime.now());
-        response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        response.put("error", "Internal Server Error");
-        response.put("message", "An unexpected error occurred");
+        response.put(TIMESTAMP, LocalDateTime.now());
+        response.put(STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.put(ERROR, "Internal Server Error");
+        response.put(MESSAGE, "An unexpected error occurred" + e.getMessage());
         
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }

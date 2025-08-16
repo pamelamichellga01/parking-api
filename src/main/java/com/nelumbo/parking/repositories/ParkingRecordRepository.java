@@ -1,7 +1,6 @@
 package com.nelumbo.parking.repositories;
 
 import com.nelumbo.parking.entities.ParkingRecord;
-import com.nelumbo.parking.entities.ParkingRecord.ParkingStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

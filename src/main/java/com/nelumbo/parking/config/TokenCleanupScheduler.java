@@ -11,8 +11,8 @@ public class TokenCleanupScheduler {
 
     private final JwtUtil jwtUtil;
 
-    // Ejecutar cada día a las 2:00 AM
-    @Scheduled(cron = "0 0 2 * * ?")
+    // Ejecutar cada día a las 2:00 AM (configurable)
+    @Scheduled(cron = "${app.scheduler.token-cleanup.cron:0 0 2 * * ?}")
     public void cleanupExpiredTokens() {
         jwtUtil.cleanupExpiredInvalidTokens();
     }

@@ -19,13 +19,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -84,9 +81,6 @@ class AuthServiceTest {
         // Arrange
         Authentication adminAuth = mock(Authentication.class);
         when(adminAuth.isAuthenticated()).thenReturn(true);
-        when(adminAuth.getAuthorities()).thenReturn(
-                (Collection) Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"))
-        );
         
         try (MockedStatic<SecurityContextHolder> mockedStatic = mockStatic(SecurityContextHolder.class)) {
             mockedStatic.when(SecurityContextHolder::getContext).thenReturn(securityContext);
@@ -110,9 +104,6 @@ class AuthServiceTest {
         // Arrange
         Authentication adminAuth = mock(Authentication.class);
         when(adminAuth.isAuthenticated()).thenReturn(true);
-        when(adminAuth.getAuthorities()).thenReturn(
-                (Collection) Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"))
-        );
         
         try (MockedStatic<SecurityContextHolder> mockedStatic = mockStatic(SecurityContextHolder.class)) {
             mockedStatic.when(SecurityContextHolder::getContext).thenReturn(securityContext);
@@ -132,9 +123,6 @@ class AuthServiceTest {
         // Arrange
         Authentication socioAuth = mock(Authentication.class);
         when(socioAuth.isAuthenticated()).thenReturn(true);
-        when(socioAuth.getAuthorities()).thenReturn(
-                (Collection) Collections.singletonList(new SimpleGrantedAuthority("ROLE_SOCIO"))
-        );
         
         try (MockedStatic<SecurityContextHolder> mockedStatic = mockStatic(SecurityContextHolder.class)) {
             mockedStatic.when(SecurityContextHolder::getContext).thenReturn(securityContext);

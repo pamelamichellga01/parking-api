@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -98,7 +99,7 @@ public class VehicleService {
         // Mínimo 1 hora, luego por fracciones de hora
         BigDecimal totalHours = BigDecimal.valueOf(hours);
         if (minutes > 0) {
-            totalHours = totalHours.add(BigDecimal.valueOf(minutes).divide(BigDecimal.valueOf(60), 2, BigDecimal.ROUND_UP));
+            totalHours = totalHours.add(BigDecimal.valueOf(minutes).divide(BigDecimal.valueOf(60), 2, RoundingMode.UP));
         }
         if (totalHours.compareTo(BigDecimal.ONE) < 0) {
             totalHours = BigDecimal.ONE;
