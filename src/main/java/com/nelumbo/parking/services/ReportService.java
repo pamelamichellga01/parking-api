@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ReportService {
 
-    private static final String KEY_PLACA = "placa"; // ← constante para la key repetida
+    private static final String KEY_PLACA = "placa"; 
 
     private final VehicleHistoryRepository vehicleHistoryRepository;
     private final ParkingRecordRepository parkingRecordRepository;
@@ -44,11 +44,11 @@ public class ReportService {
                 .limit(limit)
                 .map(entry -> {
                     Map<String, Object> result = new HashMap<>();
-                    result.put(KEY_PLACA, entry.getKey()); // ← usa la constante
+                    result.put(KEY_PLACA, entry.getKey()); 
                     result.put("totalRegistros", entry.getValue());
                     return result;
                 })
-                .toList(); // ← Stream.toList()
+                .toList(); 
     }
 
     public List<Map<String, Object>> getFirstTimeVehiclesByParking(Long parkingId) {
@@ -68,11 +68,11 @@ public class ReportService {
                 .filter(entry -> entry.getValue() == 1)
                 .map(entry -> {
                     Map<String, Object> result = new HashMap<>();
-                    result.put(KEY_PLACA, entry.getKey()); // ← usa la constante
+                    result.put(KEY_PLACA, entry.getKey()); 
                     result.put("totalVisitas", entry.getValue());
                     return result;
                 })
-                .toList(); // ← Stream.toList()
+                .toList(); 
     }
 
     public Map<String, Object> getEarningsByParkingAndDate(Long parkingId, LocalDate date) {
@@ -105,13 +105,13 @@ public class ReportService {
         result.put("detalle", history.stream()
                 .map(h -> {
                     Map<String, Object> detail = new HashMap<>();
-                    detail.put(KEY_PLACA, h.getLicensePlate()); // ← usa la constante
+                    detail.put(KEY_PLACA, h.getLicensePlate()); 
                     detail.put("entrada", h.getEntryDateTime());
                     detail.put("salida", h.getExitDateTime());
                     detail.put("costo", h.getTotalCost());
                     return detail;
                 })
-                .toList()); // ← Stream.toList()
+                .toList()); 
 
         return result;
     }
@@ -123,7 +123,7 @@ public class ReportService {
 
         return parkings.stream()
                 .map(parking -> getEarningsByParkingAndDate(parking.getId(), finalDate))
-                .toList(); // ← Stream.toList()
+                .toList(); 
     }
 
     public List<Map<String, Object>> getTopVehiclesAllParkings(int limit) {
@@ -140,11 +140,11 @@ public class ReportService {
                 .limit(limit)
                 .map(entry -> {
                     Map<String, Object> result = new HashMap<>();
-                    result.put(KEY_PLACA, entry.getKey()); // ← usa la constante
+                    result.put(KEY_PLACA, entry.getKey()); 
                     result.put("totalRegistros", entry.getValue());
                     return result;
                 })
-                .toList(); // ← Stream.toList()
+                .toList(); 
     }
 
     public Map<String, Object> getEarningsByPeriod(Long parkingId, String period) {

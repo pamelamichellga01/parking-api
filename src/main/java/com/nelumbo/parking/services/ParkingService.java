@@ -20,12 +20,12 @@ public class ParkingService {
     private final UserRepository userRepository;
     
     public Parking createParking(ParkingRequest request) {
-        // Validar que el nombre no exista
+        
         if (parkingRepository.existsByName(request.getName())) {
             throw new ValidationException("Ya existe un parqueadero con ese nombre");
         }
         
-        // El socio es OPCIONAL - solo validar si se proporciona
+        
         User partner = null;
         if (request.getPartnerId() != null) {
             partner = userRepository.findById(request.getPartnerId())
@@ -40,7 +40,7 @@ public class ParkingService {
                 .name(request.getName())
                 .capacity(request.getCapacity())
                 .hourlyRate(request.getHourlyRate())
-                .partner(partner)  // Puede ser null
+                .partner(partner)  
                 .build();
         
         return parkingRepository.save(parking);
@@ -58,13 +58,13 @@ public class ParkingService {
     public Parking updateParking(Long id, ParkingRequest request) {
         Parking existingParking = getParkingById(id);
         
-        // Validar que el nombre no exista en otro parqueadero
+        
         if (!existingParking.getName().equals(request.getName()) && 
             parkingRepository.existsByName(request.getName())) {
             throw new ValidationException("Ya existe un parqueadero con ese nombre");
         }
         
-        // Validar que el socio existe y tenga rol SOCIO
+        
         User partner = userRepository.findById(request.getPartnerId())
                 .orElseThrow(() -> new ValidationException("El socio especificado no existe"));
         
@@ -93,12 +93,12 @@ public class ParkingService {
         return parkingRepository.findByPartnerEmail(partnerEmail);
     }
     
-    // NUEVO MÉTODO: Asociar socio a parqueadero existente
+
     public Parking associatePartnerToParking(Long parkingId, Long partnerId) {
-        // Verificar que el parqueadero existe
+       
         Parking parking = getParkingById(parkingId);
         
-        // Verificar que el socio existe y tenga rol SOCIO
+        
         User partner = userRepository.findById(partnerId)
                 .orElseThrow(() -> new ValidationException("El socio especificado no existe"));
         
@@ -106,13 +106,13 @@ public class ParkingService {
             throw new ValidationException("El usuario especificado debe tener rol SOCIO");
         }
         
-        // Asociar el socio al parqueadero
+        
         parking.setPartner(partner);
         
         return parkingRepository.save(parking);
     }
     
-    // NUEVO MÉTODO: Desasociar socio de parqueadero
+    
     public Parking removePartnerFromParking(Long parkingId) {
         Parking parking = getParkingById(parkingId);
         
@@ -122,13 +122,13 @@ public class ParkingService {
         return parkingRepository.save(parking);
     }
     
-    // NUEVO MÉTODO: Verificar si un parqueadero tiene socio
+    
     public boolean hasPartner(Long parkingId) {
         Parking parking = getParkingById(parkingId);
         return parking.getPartner() != null;
     }
     
-    // NUEVO MÉTODO: Obtener parqueaderos sin socio
+    
     public List<Parking> getParkingsWithoutPartner() {
         return parkingRepository.findAll().stream()
                 .filter(parking -> parking.getPartner() == null)

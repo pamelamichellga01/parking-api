@@ -51,7 +51,7 @@ public class VehicleController {
         return ResponseEntity.ok(vehicles);
     }
     
-    // Clases de respuesta para mantener consistencia con el reto
+    
     public static class VehicleEntryResponse {
         private Long id;
         

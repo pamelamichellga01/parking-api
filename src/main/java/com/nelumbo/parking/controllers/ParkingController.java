@@ -69,7 +69,6 @@ public class ParkingController {
         return ResponseEntity.ok(parkings);
     }
     
-    // NUEVO ENDPOINT: Asociar socio a parqueadero
     @PostMapping("/{parkingId}/associate-partner")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Parking> associatePartnerToParking(
@@ -79,7 +78,6 @@ public class ParkingController {
         return ResponseEntity.ok(parking);
     }
     
-    // NUEVO ENDPOINT: Desasociar socio de parqueadero
     @DeleteMapping("/{parkingId}/partner")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Parking> removePartnerFromParking(@PathVariable Long parkingId) {
@@ -87,7 +85,6 @@ public class ParkingController {
         return ResponseEntity.ok(parking);
     }
     
-    // NUEVO ENDPOINT: Verificar si un parqueadero tiene socio
     @GetMapping("/{parkingId}/has-partner")
     @PreAuthorize("hasRole('ADMIN') or hasRole('SOCIO')")
     public ResponseEntity<Boolean> hasPartner(@PathVariable Long parkingId) {
@@ -95,7 +92,6 @@ public class ParkingController {
         return ResponseEntity.ok(hasPartner);
     }
     
-    // NUEVO ENDPOINT: Obtener parqueaderos sin socio
     @GetMapping("/without-partner")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Parking>> getParkingsWithoutPartner() {

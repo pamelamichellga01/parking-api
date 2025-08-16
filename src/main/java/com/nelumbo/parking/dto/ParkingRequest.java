@@ -28,6 +28,6 @@ public class ParkingRequest {
     @Digits(integer = 5, fraction = 2, message = "El costo por hora debe tener máximo 5 dígitos enteros y 2 decimales")
     private BigDecimal hourlyRate;
 
-    // El socio es OPCIONAL - no es obligatorio
+    
     private Long partnerId;
 }

@@ -20,9 +20,6 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    /**
-     * Obtiene el top de vehículos más registrados en TODOS los parqueaderos
-     */
     @GetMapping("/top-vehicles-all-parkings")
     @PreAuthorize("hasAnyRole('ADMIN', 'SOCIO')")
     public ResponseEntity<List<Map<String, Object>>> getTopVehiclesAllParkings(
@@ -32,9 +29,6 @@ public class ReportController {
         return ResponseEntity.ok(topVehicles);
     }
 
-    /**
-     * Obtiene el top de vehículos más registrados en un parqueadero específico
-     */
     @GetMapping("/parking/{parkingId}/top-vehicles")
     @PreAuthorize("hasAnyRole('ADMIN', 'SOCIO')")
     public ResponseEntity<List<Map<String, Object>>> getTopVehiclesByParking(
@@ -45,9 +39,7 @@ public class ReportController {
         return ResponseEntity.ok(topVehicles);
     }
 
-    /**
-     * Obtiene vehículos de primera vez en un parqueadero
-     */
+    
     @GetMapping("/parking/{parkingId}/first-time-vehicles")
     @PreAuthorize("hasAnyRole('ADMIN', 'SOCIO')")
     public ResponseEntity<List<Map<String, Object>>> getFirstTimeVehiclesByParking(
@@ -57,9 +49,7 @@ public class ReportController {
         return ResponseEntity.ok(firstTimeVehicles);
     }
 
-    /**
-     * Obtiene las ganancias de un parqueadero por período (hoy, semana, mes, año)
-     */
+    
     @GetMapping("/parking/{parkingId}/earnings-period")
     @PreAuthorize("hasRole('SOCIO')")
     public ResponseEntity<Map<String, Object>> getEarningsByPeriod(
@@ -70,9 +60,7 @@ public class ReportController {
         return ResponseEntity.ok(earnings);
     }
 
-    /**
-     * Obtiene las ganancias de un parqueadero por fecha
-     */
+    
     @GetMapping("/parking/{parkingId}/earnings")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> getEarningsByParkingAndDate(
@@ -83,9 +71,7 @@ public class ReportController {
         return ResponseEntity.ok(earnings);
     }
 
-    /**
-     * Obtiene las ganancias de todos los parqueaderos por fecha
-     */
+    
     @GetMapping("/all-parkings/earnings")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Map<String, Object>>> getAllParkingsEarningsByDate(
@@ -95,9 +81,7 @@ public class ReportController {
         return ResponseEntity.ok(allEarnings);
     }
 
-    /**
-     * Obtiene estadísticas generales del sistema
-     */
+    
     @GetMapping("/statistics")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> getGeneralStatistics() {

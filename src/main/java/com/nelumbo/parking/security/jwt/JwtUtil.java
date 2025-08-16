@@ -4,11 +4,15 @@ import com.nelumbo.parking.entities.InvalidToken;
 import com.nelumbo.parking.repositories.InvalidTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +21,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Component
+@Slf4j
 public class JwtUtil {
 
     private final SecretKey key;
@@ -31,7 +36,6 @@ public class JwtUtil {
             @Value("${app.jwt.expiration}") long expirationMs,
             InvalidTokenRepository invalidTokenRepository
     ) {
-        // Decodifica Base64 -> bytes; valida fuerza internamente
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(base64Secret));
         this.expirationMs = expirationMs;
         this.invalidTokenRepository = invalidTokenRepository;
@@ -40,33 +44,42 @@ public class JwtUtil {
     public String generateToken(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         long now = System.currentTimeMillis();
-        
-        // Obtener los roles del usuario
+
         List<String> roles = authentication.getAuthorities().stream()
-                .map(authority -> authority.getAuthority())
-                .collect(Collectors.toList());
-        
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
         return Jwts.builder()
-                .subject(userDetails.getUsername())        // email
-                .claim("roles", roles)                    // roles del usuario
+                .subject(userDetails.getUsername())
+                .claim("roles", roles)
                 .issuedAt(new Date(now))
                 .expiration(new Date(now + expirationMs))
-                .signWith(key, Jwts.SIG.HS256)             // API 0.12.x
+                .signWith(key, Jwts.SIG.HS256)
                 .compact();
     }
 
+    // ÚNICA versión de validateToken (null-safe y manejando excepciones)
     public boolean validateToken(String token, UserDetails userDetails) {
-        // Verificar si el token está en la blacklist
-        if (isTokenInvalidated(token)) {
-            return false;
+        try {
+            if (isTokenInvalidated(token)) {
+                return false;
+            }
+            final String tokenSubject = extractUserName(token);
+            return Objects.equals(userDetails.getUsername(), tokenSubject)
+                    && !isTokenExpired(token);
+        } catch (JwtException | IllegalArgumentException e) {
+            return false; // token malformado/firmado/expirado -> no válido
         }
-        
-        final String email = extractUserName(token);
-        return email.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     public boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        try {
+            return extractExpiration(token).before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return true;
+        }
     }
 
     public Date extractExpiration(String token) {
@@ -74,45 +87,48 @@ public class JwtUtil {
     }
 
     public Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(key)   // verifica firma con la misma clave
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            return Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims(); // permite leer subject/exp aunque esté expirado
+        }
     }
 
     public String extractUserName(String token) {
         return extractAllClaims(token).getSubject();
     }
-    
-    // NUEVO MÉTODO: Extraer roles del token
+
     @SuppressWarnings("unchecked")
     public List<String> extractRoles(String token) {
         Claims claims = extractAllClaims(token);
         return claims.get("roles", List.class);
     }
-    
+
     public boolean isTokenInvalidated(String token) {
         return invalidTokenRepository.findByToken(token).isPresent();
     }
-    
+
     public void invalidateToken(String token) {
         try {
             Claims claims = extractAllClaims(token);
             Date expiration = claims.getExpiration();
-            
+
             InvalidToken invalidToken = InvalidToken.builder()
                     .token(token)
                     .invalidatedAt(LocalDateTime.now())
                     .expiresAt(expiration.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                     .build();
-            
+
             invalidTokenRepository.save(invalidToken);
-        } catch (Exception e) {
-            // Si hay error al procesar el token, lo ignoramos
+        } catch (JwtException | IllegalArgumentException e) {
+            log.warn("No se pudo invalidar el token (posiblemente malformado o ya expirado): {}", e.getMessage());
         }
     }
-    
+
     public void cleanupExpiredInvalidTokens() {
         invalidTokenRepository.deleteByExpiresAtBefore(LocalDateTime.now());
     }

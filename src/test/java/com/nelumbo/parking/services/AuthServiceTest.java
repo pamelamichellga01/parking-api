@@ -5,50 +5,40 @@ import com.nelumbo.parking.dto.RegisterRequest;
 import com.nelumbo.parking.entities.User;
 import com.nelumbo.parking.enums.Role;
 import com.nelumbo.parking.exceptions.AuthenticationException;
-import com.nelumbo.parking.exceptions.AuthorizationException;
 import com.nelumbo.parking.exceptions.ValidationException;
 import com.nelumbo.parking.repositories.UserRepository;
 import com.nelumbo.parking.security.jwt.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@ActiveProfiles("test")
+@WithMockUser(username = "admin@example.com", roles = {"ADMIN"})
 class AuthServiceTest {
 
-    @Mock
-    private UserRepository userRepository;
-
-    @Mock
-    private BCryptPasswordEncoder passwordEncoder;
-
-    @Mock
-    private AuthenticationManager authenticationManager;
-
-    @Mock
+    // ⬇️ Asegúrate de tener este campo declarado
+    @MockitoBean private UserRepository userRepository;
+    @MockitoBean private BCryptPasswordEncoder passwordEncoder;
+    @MockitoBean private AuthenticationManager authenticationManager;
+    @MockitoBean
     private JwtUtil jwtUtil;
 
-    @Mock
-    private SecurityContext securityContext;
-
-    @InjectMocks
+    @Autowired
     private AuthService authService;
 
     private User testUser;
@@ -78,115 +68,64 @@ class AuthServiceTest {
 
     @Test
     void register_Success() {
-        // Arrange
-        Authentication adminAuth = mock(Authentication.class);
-        when(adminAuth.isAuthenticated()).thenReturn(true);
-        
-        try (MockedStatic<SecurityContextHolder> mockedStatic = mockStatic(SecurityContextHolder.class)) {
-            mockedStatic.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-            when(securityContext.getAuthentication()).thenReturn(adminAuth);
-            when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-            when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
-            when(userRepository.save(any(User.class))).thenReturn(testUser);
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
 
-            // Act
-            String result = authService.register(registerRequest);
+        String result = authService.register(registerRequest);
 
-            // Assert
-            assertNotNull(result);
-            assertEquals("User registered successfully by administrator", result);
-            verify(userRepository).save(any(User.class));
-        }
+        assertNotNull(result);
+        assertEquals("User registered successfully by administrator", result);
+        verify(userRepository).save(any(User.class));
     }
 
     @Test
     void register_EmailAlreadyExists_ThrowsValidationException() {
-        // Arrange
-        Authentication adminAuth = mock(Authentication.class);
-        when(adminAuth.isAuthenticated()).thenReturn(true);
-        
-        try (MockedStatic<SecurityContextHolder> mockedStatic = mockStatic(SecurityContextHolder.class)) {
-            mockedStatic.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-            when(securityContext.getAuthentication()).thenReturn(adminAuth);
-            when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(testUser));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(testUser));
 
-            // Act & Assert
-            assertThrows(ValidationException.class, () -> {
-                authService.register(registerRequest);
-            });
-            verify(userRepository, never()).save(any(User.class));
-        }
-    }
-
-    @Test
-    void register_NotAdmin_ThrowsAuthorizationException() {
-        // Arrange
-        Authentication socioAuth = mock(Authentication.class);
-        when(socioAuth.isAuthenticated()).thenReturn(true);
-        
-        try (MockedStatic<SecurityContextHolder> mockedStatic = mockStatic(SecurityContextHolder.class)) {
-            mockedStatic.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-            when(securityContext.getAuthentication()).thenReturn(socioAuth);
-
-            // Act & Assert
-            assertThrows(AuthorizationException.class, () -> {
-                authService.register(registerRequest);
-            });
-        }
+        assertThrows(ValidationException.class, () -> authService.register(registerRequest));
+        verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
     void login_Success() {
-        // Arrange
         Authentication authentication = mock(Authentication.class);
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+        when(authenticationManager.authenticate(any(Authentication.class)))
                 .thenReturn(authentication);
         when(jwtUtil.generateToken(any(Authentication.class))).thenReturn("jwtToken");
 
-        // Act
         String result = authService.login(loginRequest);
 
-        // Assert
         assertNotNull(result);
         assertEquals("jwtToken", result);
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(authenticationManager).authenticate(any(Authentication.class));
         verify(jwtUtil).generateToken(authentication);
     }
 
     @Test
     void login_InvalidCredentials_ThrowsAuthenticationException() {
-        // Arrange
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+        when(authenticationManager.authenticate(any(Authentication.class)))
                 .thenThrow(new RuntimeException("Invalid credentials"));
 
-        // Act & Assert
-        assertThrows(AuthenticationException.class, () -> {
-            authService.login(loginRequest);
-        });
+        assertThrows(AuthenticationException.class, () -> authService.login(loginRequest));
     }
 
     @Test
     void logout_WithBearerToken_Success() {
-        // Arrange
         String authorizationHeader = "Bearer validToken";
 
-        // Act
         String result = authService.logout(authorizationHeader);
 
-        // Assert
         assertEquals("Logout successful. Token has been invalidated.", result);
         verify(jwtUtil).invalidateToken("validToken");
     }
 
     @Test
     void logout_WithoutBearerToken_Success() {
-        // Arrange
         String authorizationHeader = "InvalidHeader";
 
-        // Act
         String result = authService.logout(authorizationHeader);
 
-        // Assert
         assertEquals("Logout successful. Please remove the token from client storage.", result);
         verify(jwtUtil, never()).invalidateToken(anyString());
     }

@@ -41,7 +41,7 @@ public class ParkingRecord {
     private ParkingStatus status;
 
     public enum ParkingStatus {
-        PARKED,    // Vehículo actualmente en el parqueadero
-        EXITED     // Vehículo ya salió
+        PARKED,    
+        EXITED     
     }
 }

@@ -38,13 +38,13 @@ public class AuthService {
     }
 
     public String register(RegisterRequest request) {
-        // Verificar que el usuario autenticado sea ADMIN
+        
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new AuthenticationException("Authentication required");
         }
         
-        // Verificar que el usuario tenga rol ADMIN
+        
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
         
@@ -52,7 +52,7 @@ public class AuthService {
             throw new AuthorizationException("Only administrators can register new users");
         }
 
-        // Validaciones del usuario a registrar
+        
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new ValidationException("Email already in use");
         }

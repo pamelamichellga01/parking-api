@@ -9,36 +9,28 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class EmailService {
 
-    /**
-     * Simula el envío de un correo electrónico
-     * 
-     * @param email Email del destinatario
-     * @param placa Placa del vehículo
-     * @param mensaje Mensaje del correo
-     * @param parqueaderoNombre Nombre del parqueadero
-     * @return true si el email se envió correctamente
-     */
     public boolean sendEmail(String email, String placa, String mensaje, String parqueaderoNombre) {
+        log.info("=== SOLICITUD DE ENVÍO DE CORREO ===");
+        log.info("Email: {}", email);
+        log.info("Placa: {}", placa);
+        log.info("Mensaje: {}", mensaje);
+        log.info("Parqueadero: {}", parqueaderoNombre);
+        log.info("=== FIN SOLICITUD ===");
+
         try {
-            // Imprimir en log la solicitud que llega
-            log.info("=== SOLICITUD DE ENVÍO DE CORREO ===");
-            log.info("Email: {}", email);
-            log.info("Placa: {}", placa);
-            log.info("Mensaje: {}", mensaje);
-            log.info("Parqueadero: {}", parqueaderoNombre);
-            log.info("=== FIN SOLICITUD ===");
-            
-            // Simular envío de email
             log.info("Simulando envío de correo a: {}", email);
-            
-            // Simular delay de envío
             Thread.sleep(100);
-            
             log.info("Correo enviado exitosamente a: {}", email);
             return true;
-            
-        } catch (Exception e) {
-            log.error("Error al enviar correo: {}", e.getMessage());
+
+        } catch (InterruptedException ie) {
+
+            Thread.currentThread().interrupt();
+            log.warn("Envío de correo interrumpido para {}.", email, ie);
+            return false;
+        } catch (RuntimeException e) {
+
+            log.error("Error al enviar correo a {}: {}", email, e.getMessage(), e);
             return false;
         }
     }
