@@ -9,8 +9,8 @@ Esta carpeta contiene toda la documentación detallada del proyecto Parking API,
 ### 🔧 **Setup y Configuración** (`/setup/`)
 Documentación relacionada con la configuración inicial y del entorno:
 
-- **[`environment-setup.md`](setup/environment-setup.md)** - Guía completa de configuración de variables de entorno
-- **[`configuration-structure.md`](setup/configuration-structure.md)** - Arquitectura y estructura de la configuración
+- **[`environment-setup.md`](../docs/setup/ENVIRONMENT_SETUP.md)** - Guía completa de configuración de variables de entorno
+- **[`configuration-structure.md`](../docs/setup/CONFIGURATION_STRUCTURE.md)** - Arquitectura y estructura de la configuración
 
 ### 🌐 **API y Endpoints** (`/api/`)
 Documentación relacionada con la API y su uso:
@@ -21,15 +21,15 @@ Documentación relacionada con la API y su uso:
 
 ### 1. **Primera vez usando la API?**
 - Comienza con el [`README.md`](../README.md) principal en la raíz del proyecto
-- Luego revisa [`environment-setup.md`](setup/environment-setup.md) para configurar tu entorno
+- Luego revisa [`environment-setup.md`](../docs/setup/ENVIRONMENT_SETUP.md) para configurar tu entorno
 
 ### 2. **¿Quieres probar la API?**
 - Descarga la [colección de Postman](api/Parking-API-Postman-Collection.json)
 - Importa en Postman y comienza a probar los endpoints
 
 ### 3. **¿Problemas de configuración?**
-- Revisa [`configuration-structure.md`](setup/configuration-structure.md) para entender la arquitectura
-- Consulta [`environment-setup.md`](setup/environment-setup.md) para troubleshooting
+- Revisa [`configuration-structure.md`](../docs/setup/CONFIGURATION_STRUCTURE.md) para entender la arquitectura
+- Consulta [`environment-setup.md`](../docs/setup/ENVIRONMENT_SETUP.md) para troubleshooting
 
 ## 📖 Cómo Usar Esta Documentación
 
