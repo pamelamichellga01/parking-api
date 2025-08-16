@@ -72,8 +72,8 @@ La aplicación estará disponible en: `http://localhost:8080`
 
 Para información detallada sobre configuración, uso de la API y desarrollo, consulta la [documentación completa](docs/README.md):
 
-- **🔧 [Configuración del Entorno](docs/setup/environment-setup.md)** - Guía de variables de entorno y configuración
-- **🏗️ [Estructura de Configuración](docs/setup/configuration-structure.md)** - Arquitectura de la configuración
+- **🔧 [Configuración del Entorno](../docs/setup/environment-setup.md)** - Guía de variables de entorno y configuración
+- **🏗️ [Estructura de Configuración](../docs/setup/configuration-structure.md)** - Arquitectura de la configuración
 - **🌐 [Colección Postman](docs/api/Parking-API-Postman-Collection.json)** - Endpoints y pruebas de la API
 
 ## 🔐 Autenticación y Autorización
@@ -379,4 +379,5 @@ GET /email/health
 ---
 
 **¡Gracias por usar Parking API! 🚗✨**
+
 
